@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 
 describe('Central de Atendimento ao Cliente TAT', function() {
+    const TREE_SECONDS_IN_MS = 3000
+
     beforeEach(function() {
         cy.visit('./src/index.html')
       })
@@ -11,22 +13,38 @@ describe('Central de Atendimento ao Cliente TAT', function() {
 
     it('preenche os campos obrigatórios e envia o formulário', function() {
         const longText = 'Teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste'
+        
+        cy.clock()
+        
         cy.get('#firstName').type('Renato')
         cy.get('#lastName').type('Lobo')
         cy.get('#email').type('renatolobo_@hotmail.com')
         cy.get('#open-text-area').type(longText, {delay: 0})
         cy.contains('button', 'Enviar').click()
+
         cy.get('.success').should('be.visible')
+
+        cy.tick(TREE_SECONDS_IN_MS)
+
+        cy.get('.success').should('not.be.visible')
     })
 
     it('Exibe mensagem de erro a osubmeter o formulário com um email com formatação errada.', function() {
+
+        cy.clock()
+
         cy.get('#firstName').type('Renato')
         cy.get('#lastName').type('Lobo')
         cy.get('#email').type('renatolobo_@hotmail,com')
         cy.get('#open-text-area').type('teste')
         cy.contains('button', 'Enviar').click()
 
-        cy.get('.error').should('be.visible')
+        cy.get('.error').should('be.visible')   
+        
+        cy.tick(TREE_SECONDS_IN_MS)
+
+        cy.get('.success').should('not.be.visible')
+
     })
 
     it('Campo telefone continua vazio, quando preenchido com valor não-numerico', function() {
@@ -42,6 +60,9 @@ describe('Central de Atendimento ao Cliente TAT', function() {
     })
 
     it('Exibe mensagem de erro a osubmeter o formulário com um email com formatação errada.', function() {
+
+        cy.clock()
+
         cy.get('#firstName').type('Renato')
         cy.get('#lastName').type('Lobo')
         cy.get('#email').type('renatolobo_@hotmail.com')
@@ -50,6 +71,10 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.contains('button', 'Enviar').click()
 
         cy.get('.error').should('be.visible')
+
+        cy.tick(TREE_SECONDS_IN_MS)
+
+        cy.get('.success').should('not.be.visible')
     })
 
     it('preenche e limpa os campos nome, sobrenome, email e telefone', function(){
@@ -76,14 +101,27 @@ describe('Central de Atendimento ao Cliente TAT', function() {
     })
 
     it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', function(){
+        cy.clock()
+
         cy.contains('button', 'Enviar').click()
+
         cy.get('.error').should('be.visible')
+        
+        cy.tick(TREE_SECONDS_IN_MS)
+
+        cy.get('.success').should('not.be.visible')
     })
 
     it('envia o formuário com sucesso usando um comando customizado', function(){
+        cy.clock()
+       
         cy.fillMandatoryFieldsAndSubmit()
 
         cy.get('.success').should('be.visible')
+
+        cy.tick(TREE_SECONDS_IN_MS)
+
+        cy.get('.success').should('not.be.visible')
     })
 
     it('seleciona um produto (YouTube) por seu texto', function(){
