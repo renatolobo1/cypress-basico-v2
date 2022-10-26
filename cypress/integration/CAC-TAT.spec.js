@@ -2,6 +2,7 @@
 
 describe('Central de Atendimento ao Cliente TAT', function() {
     const TREE_SECONDS_IN_MS = 3000
+    const longTex = Cypress._.repeat('0123456789', 20)
 
     beforeEach(function() {
         cy.visit('./src/index.html')
@@ -11,7 +12,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
     })
 
-    it('preenche os campos obrigatórios e envia o formulário', function() {
+    it.only('preenche os campos obrigatórios e envia o formulário', function() {
         const longText = 'Teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste'
         
         cy.clock()
@@ -210,7 +211,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.contains('Talking About Testing').should('be.visible')
     })
 
-    it.only('exibe e esconde as mensagens de sucesso e erro usando o .invoke', () => {
+    it('exibe e esconde as mensagens de sucesso e erro usando o .invoke', () => {
         cy.get('.success')
           .should('not.be.visible')
           .invoke('show')
@@ -225,6 +226,13 @@ describe('Central de Atendimento ao Cliente TAT', function() {
           .and('contain', 'Valide os campos obrigatórios!')
           .invoke('hide')
           .should('not.be.visible')
+      })
+      
+      it.only('preenche a area de texto usando o comando invoke', function(){        
+
+        cy.get('#open-text-area')
+            .invoke('val', longTex)
+            .should('have.value', longTex)
       })
 
     
