@@ -12,7 +12,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
     })
 
-    it.only('preenche os campos obrigatórios e envia o formulário', function() {
+    it('preenche os campos obrigatórios e envia o formulário', function() {
         const longText = 'Teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste, teste'
         
         cy.clock()
@@ -228,11 +228,31 @@ describe('Central de Atendimento ao Cliente TAT', function() {
           .should('not.be.visible')
       })
       
-      it.only('preenche a area de texto usando o comando invoke', function(){        
+      it('preenche a area de texto usando o comando invoke', function(){        
 
         cy.get('#open-text-area')
             .invoke('val', longTex)
             .should('have.value', longTex)
+      })
+
+      it('faz uma requisição HTTP', function(){
+        cy.request('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
+        .should(function(response){
+            const {status, statusText, body} = response
+            expect(status).to.equal(200)
+            expect(statusText).to.equal('OK')
+            expect(body).to.include('CAC TAT')
+        })
+      })
+
+      it.only('Encontree o cato escondigo', function(){
+        cy.get('#cat')
+            .invoke('show')
+            .should('be.visible')
+        cy.get('#title')
+            .invoke('text', 'GATINHO')
+        cy.get('#subtitle')
+            .invoke('text', 'Amamos Gatos')
       })
 
     
